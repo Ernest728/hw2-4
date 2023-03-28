@@ -11,7 +11,7 @@ EventQueue queue(32 * EVENTS_EVENT_SIZE);
 InterruptIn B(D5);
 Thread thread1, thread2, thread3, thread4;
 uLCD_4DGL uLCD(D1, D0, D2);
-float threshold = 0.94;
+float threshold = 0.97;
 int current;
 
 void print()
@@ -37,7 +37,7 @@ void fall_handler()
 
 void PWM_thread()
 {
-    PWM1.period_ms(50);
+    PWM1.period_ms(5);
     float R[20];
     int Re[20];
     int i = 0;
@@ -51,11 +51,11 @@ void PWM_thread()
     for (;i < 20; i++)
         R[i] = 0.0;
     for (i = 0; i < 20; i++)
-        Re[i] = int(R[i]*50000);
+        Re[i] = int(R[i]*5000);
     while (true) {
         for (int j = 0; j < 20; j++) {
             PWM1.pulsewidth_us(Re[j]);
-            wait_us(46500);
+            ThisThread::sleep_for(50ms);
         }
     }
 }
@@ -64,7 +64,7 @@ void Light_sense()
 {
     while(true) {
         Aout = Ain;
-        wait_us(1000);
+        ThisThread::sleep_for(1ms);
     }
 }
 
@@ -90,7 +90,7 @@ void Light_Rupt()
                 y = 0;
             }
                 
-            wait_us(1000);
+            ThisThread::sleep_for(1ms);
         }
     }
 }
@@ -106,5 +106,3 @@ int main()
     B.rise(&rise_handler);
     B.fall(&fall_handler);
 }
-
-
